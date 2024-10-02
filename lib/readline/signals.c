@@ -3,7 +3,7 @@
 /* Copyright (C) 1987-2021 Free Software Foundation, Inc.
 
    This file is part of the GNU Readline Library (Readline), a library
-   for reading lines of text with interactive input and history editing.      
+   for reading lines of text with interactive input and history editing.
 
    Readline is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ static void rl_maybe_restore_sighandler (int, sighandler_cxt *);
 
 static void rl_signal_handler (int);
 static void _rl_handle_signal (int);
-     
+
 /* Exported variables for use by applications. */
 
 /* If non-zero, readline will install its own signal handlers for
@@ -295,7 +295,7 @@ _rl_handle_signal (int sig)
       /* We don't need to modify the signal mask now that this is not run in
 	 a signal handler context. */
 
-      rl_reset_after_signal ();      
+      rl_reset_after_signal ();
     }
 
   RL_UNSETSTATE(RL_STATE_SIGHANDLER);
@@ -379,6 +379,17 @@ rl_set_sighandler (int sig, SigHandler *handler, sighandler_cxt *ohandler)
 static void
 rl_maybe_set_sighandler (int sig, SigHandler *handler, sighandler_cxt *ohandler)
 {
+#ifdef __QNX__
+  struct sigaction oact;
+
+  /* Check for SIG_IGN without installing and then removing a new handler.
+	 Avoids potential race conditions in the window between the two actions. */
+  sigaction (sig, NULL, &oact);
+  if (oact.sa_handler != SIG_IGN)
+	  rl_set_sighandler (sig, handler, ohandler);
+  else
+	  ohandler->sa_handler = SIG_IGN;
+#else
   sighandler_cxt dummy;
   SigHandler *oh;
 
@@ -387,6 +398,7 @@ rl_maybe_set_sighandler (int sig, SigHandler *handler, sighandler_cxt *ohandler)
   oh = rl_set_sighandler (sig, handler, ohandler);
   if (oh == (SigHandler *)SIG_IGN)
     rl_sigaction (sig, ohandler, &dummy);
+#endif
 }
 
 /* Set the disposition of SIG to HANDLER, if HANDLER->sa_handler indicates the
@@ -440,7 +452,7 @@ rl_set_signals (void)
       sigaddset (&bset, SIGTTOU);
 #endif
       sigmask_set = 1;
-    }      
+    }
 #endif /* HAVE_POSIX_SIGNALS */
 
   if (rl_catch_signals && signals_set_flag == 0)
@@ -585,7 +597,7 @@ rl_reset_after_signal (void)
 /* Free up the readline variable line state for the current line (undo list,
    any partial history entry, any keyboard macros in progress, and any
    numeric arguments in process) after catching a signal, before calling
-   rl_cleanup_after_signal(). */ 
+   rl_cleanup_after_signal(). */
 void
 rl_free_line_state (void)
 {

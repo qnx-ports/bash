@@ -128,7 +128,7 @@ else
 	MALLOC_LIB=
 	MALLOC_LIBRARY=
 	MALLOC_LDFLAGS=
-	MALLOC_DEP=	
+	MALLOC_DEP=
 fi
 
 if test "$opt_afs" = yes; then
@@ -511,7 +511,7 @@ if test "$opt_static_link" = yes; then
 	prefer_shared=no
 	# if we're using gcc, add `-static' to LDFLAGS, except on Solaris >= 2
 	if test "$GCC" = "yes"; then
-		STATIC_LD="-static" 
+		STATIC_LD="-static"
 		case "$host_os" in
 		solaris2*|linux*)	;;
 		*)		LDFLAGS="$LDFLAGS -static" ;;	# XXX experimental
@@ -578,7 +578,7 @@ then
 
 	case "$ac_cv_rl_version" in
 	8*|9*)	;;
-	*)	opt_with_installed_readline=no 
+	*)	opt_with_installed_readline=no
 		AC_MSG_WARN([installed readline library is too old to be linked with bash])
 		AC_MSG_WARN([using private bash version])
 		;;
@@ -1178,7 +1178,7 @@ linux*)		LOCAL_LDFLAGS=-rdynamic		 # allow dynamic loading
 netbsd*|openbsd*)	LOCAL_CFLAGS="-DDEV_FD_STAT_BROKEN" ;;
 freebsd*|midnightbsd*)	LOCAL_CFLAGS='-DHEREDOC_PIPESIZE=4096' ;;
 *qnx[[67]]*)	LOCAL_LIBS="-lncurses" ;;
-*qnx*)		LOCAL_CFLAGS="-Dqnx -F -3s" LOCAL_LDFLAGS="-3s" LOCAL_LIBS="-lunix -lncurses" ;;
+*qnx*)		LOCAL_CFLAGS="-Dqnx" LOCAL_LIBS="-lncurses" ;;
 powerux*)	LOCAL_LIBS="-lgen" ;;
 cygwin*)	LOCAL_CFLAGS=-DRECYCLES_PIDS ;;
 opennt*|interix*) LOCAL_CFLAGS="-DNO_MAIN_ENV_ARG -DBROKEN_DIRENT_D_INO -D_POSIX_SOURCE -D_ALL_SOURCE -DRECYCLES_PIDS" ;;
