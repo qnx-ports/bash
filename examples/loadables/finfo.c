@@ -283,7 +283,7 @@ struct stat *st;
 	ma = major (st->st_rdev);
 	mi = minor (st->st_rdev);
 #if defined (makedev)
-	d = makedev (ma, mi);
+	d = makedev (0, ma, mi);
 #else
 	d = st->st_rdev & 0xFF;
 #endif
